@@ -17,7 +17,7 @@
 #include "ch.h"
 #include "hal.h"
 #include <profiLED_gen.h>
-
+#include <uavcan.h>
 #define NUM_PROFILEDS 4
 
 static uint8_t txbuf[NUM_PROFILEDS*4+7];
@@ -69,6 +69,20 @@ static THD_FUNCTION(BlinkerThread, arg) {
 }
 
 /*
+ * Uavcan thread
+ */
+static THD_WORKING_AREA(waUavcanThread, 1024);
+static THD_FUNCTION(uavcanThread, arg) {
+    (void)arg;
+    chRegSetThreadName("uavcan");
+
+    while (true) {
+        uavcanUpdate();
+        chThdSleepMilliseconds(50);
+    }
+}
+
+/*
  * Application entry point.
  */
 int main(void) {
@@ -96,6 +110,10 @@ int main(void) {
      */
     chThdCreateStatic(waBlinkerThread, sizeof(waBlinkerThread), NORMALPRIO, BlinkerThread, NULL);
 
+    if (uavcanInit(21)) {
+        //start uavcan thread
+        chThdCreateStatic(waUavcanThread, sizeof(waUavcanThread), NORMALPRIO, uavcanThread, NULL);
+    }
     /*
      * Normal main() thread activity, in this demo it does nothing except
      * sleeping in a loop and check the button state.

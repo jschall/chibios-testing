@@ -1,6 +1,7 @@
 #pragma once
 
 #define STM32F3xx_MCUCONF
+
 #define STM32_HSECLK 8000000
 
 #define STM32_NO_INIT                       FALSE
@@ -53,6 +54,11 @@
 #define STM32_ST_IRQ_PRIORITY               8
 #define STM32_ST_USE_TIMER                  2
 
+/*
+ * CAN driver system settings.
+ */
+#define STM32_CAN_USE_CAN1                  TRUE
+#define STM32_CAN_CAN1_IRQ_PRIORITY         11
 // #define STM32_SPI_USE_SPI1                  FALSE
 // #define STM32_SPI_USE_SPI2                  FALSE
 // #define STM32_SPI_USE_SPI3                  TRUE
